@@ -17,6 +17,8 @@ from console import remove_escape_sequences
 from pycmd_public import color, appearance, behavior
 from common import apply_settings, sanitize_settings
 
+from hooks import command_hook
+
 pycmd_data_dir = None
 pycmd_install_dir = None
 state = None
@@ -559,6 +561,9 @@ def run_command(tokens):
             # GUI application. If it is, spawn the process and then get on with
             # life.
             cmd = expand_env_vars(tokens[0].strip('"'))
+
+            cmd, tokens = command_hook(cmd, tokens)
+            
             dir, name = os.path.split(cmd)
             ext = os.path.splitext(name)[1]
 
